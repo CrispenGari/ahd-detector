@@ -1,5 +1,6 @@
 from flask import Blueprint, make_response, jsonify, request
-from models.pytorch import predict_humour, ahd_model
+from models.pytorch import predict_humour as torch_predict_humour, ahd_model as torch_model
+from models.tensorflow import predict_humour as tf_predict_humour, ahd_model as tf_model
 from exceptions import *
 
 blueprint = Blueprint("blueprint", __name__)
@@ -25,9 +26,9 @@ def detect_humour():
             res = request.get_json(force=True)
             if res.get("text"):
                 if MODEL_TYPE == "tensorflow":
-                    pred = predict_humour(res.get("text"), ahd_model)
+                    pred = tf_predict_humour(res.get("text"), tf_model)
                 else:
-                    pass
+                    pred = torch_predict_humour(res.get("text"), torch_model)
                 return make_response(jsonify(pred.to_json())), 200
             else:
                 raise EmptyJsonBodyException("you should pass the 'text' in your json body while making this request.")

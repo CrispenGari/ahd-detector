@@ -1,6 +1,7 @@
 import graphene
 
-from models.pytorch import predict_humour, ahd_model
+from models.pytorch import predict_humour as torch_predict_humour, ahd_model as torch_model
+from models.tensorflow import predict_humour as tf_predict_humour, ahd_model as tf_model
 
 class PredictionInputType(graphene.InputObjectType):
     """
@@ -45,9 +46,9 @@ class Query(graphene.ObjectType):
     def resolve_predict_humour(root, info, input):
         model = "tensorflow" if str(input.get('modelType')).lower().strip() == "tf" else "pytorch"
         if model == "tensorflow":
-            pass
+            res = tf_predict_humour(input.get('text'), model=tf_model)
         else:
-            res = predict_humour(input.get('text'), model=ahd_model)
+            res = torch_predict_humour(input.get('text'), model=torch_model)
         return PredictionResponse(
             ok=True,
             prediction=PredictionType(
