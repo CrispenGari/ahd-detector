@@ -8,8 +8,6 @@ from models import PYTORCH_AHD_MODEL_PATH, PYTORCH_AHD_VOCAB, device, CLASSES, P
 PAD_TOKEN = '<pad>'
 UNK_TOKEN = '<unk>'
 
-print(PYTORCH_AHD_VOCAB[PAD_TOKEN], PYTORCH_AHD_VOCAB[UNK_TOKEN], PYTORCH_AHD_VOCAB['the'])
-
 # Tokenizer
 print(" ✅ LOADING TOKENIZER FROM SPACY(en_core_web_sm)!\n")
 spacy_en = spacy.load('en_core_web_sm')
@@ -81,14 +79,14 @@ def preprocess_text(text, max_len=50, padding="pre"):
     text_list= text_holder.unsqueeze(dim=0)
     return text_list
 
-def predict_homour(sent: str, model):
+def predict_humour(sent: str, model):
     model.eval()
     tensor = preprocess_text(sent)
     pred = torch.sigmoid(model(tensor.to(device))).item()
-    
     label = 1 if pred >=0.5 else 0
     probability = float(round(pred, 3)) if pred >= 0.5 else float(round(1 - pred, 3))
     return PredictionType(label=label, 
                           probability=probability, 
-                          class_= CLASSES[label]
+                          class_= CLASSES[label],
+                          sent=sent.lower()
                           )

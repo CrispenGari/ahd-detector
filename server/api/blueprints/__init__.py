@@ -1,5 +1,5 @@
 from flask import Blueprint, make_response, jsonify, request
-from models.pytorch import predict_homour, ahd_model
+from models.pytorch import predict_humour, ahd_model
 from exceptions import *
 
 blueprint = Blueprint("blueprint", __name__)
@@ -11,8 +11,8 @@ def detect_humour():
         if request.query_string:
             qs = dict(request.args)
             if 'model' in qs.keys():
-                if qs['model'].lower() == 'tf' or qs['model'].lower() == 'pt':
-                    MODEL_TYPE = "tensorflow" if qs.get('model').lower() == 'tf' else 'pytorch'
+                if str(qs['model']).lower() == 'tf' or str(qs['model']).lower() == 'pt':
+                    MODEL_TYPE = "tensorflow" if str(qs.get('model')).lower() == 'tf' else 'pytorch'
                 else:
                     raise InvalidQueryStringException(
                         "Values for query string 'model' can be either 'tf' or 'pt'"
@@ -24,9 +24,10 @@ def detect_humour():
         if request.method == "POST":
             res = request.get_json(force=True)
             if res.get("text"):
-                print(MODEL_TYPE)
-                pred = predict_homour(res.get("text"), ahd_model)
-                print(pred)
+                if MODEL_TYPE == "tensorflow":
+                    pred = predict_humour(res.get("text"), ahd_model)
+                else:
+                    pass
                 return make_response(jsonify(pred.to_json())), 200
             else:
                 raise EmptyJsonBodyException("you should pass the 'text' in your json body while making this request.")

@@ -1,6 +1,6 @@
 import graphene
 
-from models.pytorch import predict_homour, ahd_model
+from models.pytorch import predict_humour, ahd_model
 
 class PredictionInputType(graphene.InputObjectType):
     """
@@ -9,7 +9,7 @@ class PredictionInputType(graphene.InputObjectType):
         model_name:str = "tf-model" or "pt-model" (tensorflow or pytorch model)
         text:str = The sentence or text which the user want to predict humour
     """
-    model_name = graphene.String(required=True, default_value="pt-model")
+    modelType = graphene.String(required=True, default_value="pt")
     text = graphene.String(required=True)
     
 class PredictionType(graphene.ObjectType):
@@ -19,6 +19,7 @@ class PredictionType(graphene.ObjectType):
     label = graphene.Int(required=True)
     probability = graphene.Float(required=True)
     class_ = graphene.String(required=True)
+    text = graphene.String(required=True)
 
 class ErrorType(graphene.ObjectType):
     """
@@ -42,13 +43,18 @@ class Query(graphene.ObjectType):
                                     input=graphene.Argument(graphene.NonNull(PredictionInputType))
                                     )
     def resolve_predict_humour(root, info, input):
-        res = predict_homour(input.get('text'), model=ahd_model)
+        model = "tensorflow" if str(input.get('modelType')).lower().strip() == "tf" else "pytorch"
+        if model == "tensorflow":
+            pass
+        else:
+            res = predict_humour(input.get('text'), model=ahd_model)
         return PredictionResponse(
             ok=True,
             prediction=PredictionType(
                 label=res.label,
                 probability=res.probability,
-                class_=res.class_
+                class_=res.class_,
+                text= res.text
             )
         )
     

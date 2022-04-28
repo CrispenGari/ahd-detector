@@ -27,15 +27,16 @@ with open(os.path.join(os.getcwd(), f"models/tensorflow/static/vocab-tf.json"), 
     TENSORFLOW_AHD_VOCAB = json.load(ref)
     
 # Classes
-CLASSES = ['NOT-HUMOUR', 'HUMOUR']
+CLASSES = ["NOT HUMOUR", "HUMOUR"]
 
 # Prediction Type
 
 class PredictionType:
-    def __init__(self, label:int, probability:float, class_: str) -> None:
+    def __init__(self, label:int, probability:float, class_: str, sent:str) -> None:
         self.label = label
         self.class_ = class_
         self.probability = probability
+        self.text = sent
         
     def __str__(self) -> str:
         return "<Prediction Type>"
@@ -44,5 +45,6 @@ class PredictionType:
         return {
             'label': self.label,
             'class_': self.class_,
-            'probability': self.probability
+            'probability': self.probability,
+            'text': self.text
         }

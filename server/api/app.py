@@ -24,11 +24,10 @@ class AppConfig:
 def meta():
     meta ={
         "programmer": "@crispengari",
-        "main": "audio classification",
-        "description": "given an a audio of an animal the model should classify weather the sound is for a cat or a dog.",
+        "main": "automatic humour detection(ahd)",
+        "description": "given a text detect if there's humour or not in that given text.",
         "language": "python",
-        "library": "pytorch",
-        "mainLibray": "torchaudio"
+        "libraries": ["pytorch", "tensorflow", "keras", "torchtext"],
     }
     return make_response(jsonify(meta)), 200
 
