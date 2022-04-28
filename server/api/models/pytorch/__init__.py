@@ -1,13 +1,14 @@
 import torch
 import spacy
 from torch import nn
-from torchtext import data
 from torch.nn import functional as F
 from models import PYTORCH_AHD_MODEL_PATH, PYTORCH_AHD_VOCAB, device, CLASSES, PredictionType
 
 # Tokens 
 PAD_TOKEN = '<pad>'
 UNK_TOKEN = '<unk>'
+
+print(PYTORCH_AHD_VOCAB[PAD_TOKEN], PYTORCH_AHD_VOCAB[UNK_TOKEN], PYTORCH_AHD_VOCAB['the'])
 
 # Tokenizer
 print(" ✅ LOADING TOKENIZER FROM SPACY(en_core_web_sm)!\n")
