@@ -1,4 +1,4 @@
-___
+---
 
 Project: `Automatic Humour Detection (AHD)`
 
@@ -10,9 +10,10 @@ Abstract: _`Automatic Humour Detection (AHD) is a very useful topic in morden te
 
 Research Paper: [`2004.12765`](https://arxiv.org/abs/2004.12765)
 
-Keywords: `pytorch`, `embedding`, `torchtext`, `fast-text`, `LSTM`, `RNN`
+Keywords: `pytorch`, `embedding`, `torchtext`, `fast-text`, `LSTM`, `RNN`, `CNN`, `tensorflow`, `keras`, `flask`, `graphql`, `rest`
 
 Programming Language: `python`
 
 Dataset: [`kaggle`](https://www.kaggle.com/datasets/deepcontractor/200k-short-texts-for-humor-detection)
-___
+
+---
