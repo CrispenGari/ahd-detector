@@ -12,17 +12,59 @@ Programmer: `@crispengari`
 
 Date: `2022-04-26`
 
-Abstract: _`Automatic Humour Detection (AHD) is a very useful topic in morden technologies. In this notebook we are going to create an Artificial Neural Network model using Deep Learning to detect humour in short texts. AHD are very useful because in model technologies such as virtual assistance and chatbots. They help Artificial Virtual Assistance and Bot to detect wether to take the conversation serious or not`._
+Abstract: _`Automatic Humour Detection (AHD) is a very useful topic in modern technologies. In this project we are going to create an Artificial Neural Network model(s) using Deep Learning to detect humour in short texts. AHD are very useful because in model technologies such as virtual assistance and chatbots. They help Artificial Virtual Assistance and Bot to detect wether to take the conversation serious or not`._
 
 Research Paper: [`2004.12765`](https://arxiv.org/abs/2004.12765)
 
-Keywords: `pytorch`, `embedding`, `torchtext`, `fast-text`, `LSTM`, `RNN`, `CNN`, `tensorflow`, `keras`, `flask`, `graphql`, `rest`
+Keywords: `pytorch`, `embedding`, `torchtext`, `fast-text`, `LSTM`, `RNN`, `CNN`, `tensorflow`, `keras`, `flask`, `graphql`, `rest`, `bi-directional`,
+`api`
 
 Programming Language: `python`
 
 Dataset: [`kaggle`](https://www.kaggle.com/datasets/deepcontractor/200k-short-texts-for-humor-detection)
 
 --
+
+### Approach
+
+I'm going to create two artificial neural network models using `python` and `pytorch`. These models will serve a basic binary classification on text.
+
+The `tensorflow` model will be built using `bi-direction` Long Short Term Memory(LSTM) layers and Gated Recurrent Unit (GRU) together with some layers such as the `Flatten`, `Dropout` , `Dense`. This model will be built using the functional api refer to [this notebook](/notebooks/02_AHD_Classification.ipynb)
+
+The pytorch model will be built using `CNN`. This model have the following code base behind the scenes:
+
+```py
+class AHDCNN(nn.Module):
+    def __init__(self,
+       vocab_size,
+       embedding_size,
+       n_filters,
+       filter_sizes,
+       output_size,
+       dropout,
+       pad_idx):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size,
+                                      embedding_size,
+                                      padding_idx = pad_idx
+                                      )
+        self.convs = nn.ModuleList([
+                                    nn.Conv2d(in_channels = 1,
+                                            out_channels = n_filters,
+                                            kernel_size = (fs, embedding_size))
+                                    for fs in filter_sizes
+                                    ])
+        self.fc = nn.Linear(len(filter_sizes) * n_filters, output_size)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, text):
+        embedded = self.embedding(text)
+        embedded = embedded.unsqueeze(1)
+        conved = [F.relu(conv(embedded)).squeeze(3) for conv in self.convs]
+        pooled = [F.max_pool1d(conv, conv.shape[2]).squeeze(2) for conv in conved]
+        cat = self.dropout(torch.cat(pooled, dim = 1))
+        return self.fc(cat)
+```
 
 ### Folder structure of the server
 
@@ -243,5 +285,8 @@ The data for training these notebooks was found on [`kaggle`](https://www.kaggle
 All the notebooks for training and data preparations are found in this repository.
 
 1. [data preparation](/notebooks/00_AHD_Data_Prep.ipynb)
-2. [pytorch model](/notebooks/01_AHD_Classification.ipynb)
-3. [tensorflow model](/notebooks/02_AHD_Classification.ipynb)
+2. [pytorch model with glove word vectors](/notebooks/01_AHD_Classification.ipynb)
+3. [pytorch model without glove word vectors](/notebooks/03_AHD_Classification_No_EmbeddingVectors.ipynb)
+4. [tensorflow model](/notebooks/02_AHD_Classification.ipynb)
+
+> **_Note that the pytorch `model` that is being served by the server was trained in the 3rd notebook without glove word vectors._**

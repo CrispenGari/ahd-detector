@@ -1,8 +1,10 @@
 """
-note that you only need to download the tokenizer model once from spacy.
+* note that you only need to download the tokenizer model once from spacy.
+* also you need to download "" once from nltk
 """
-# import spacy
+# import spacy, nltk
 # spacy.cli.download("en_core_web_sm")
+# nltk.download('punkt')
 
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -14,11 +16,9 @@ from flask_graphql import GraphQLView
 from schema import schema
 
 app.register_blueprint(blueprint, url_prefix="/api")
-
 class AppConfig:
     PORT = 3001
-    DEBUG = True
-    
+    DEBUG = False
     
 @app.route('/', methods=["GET"])
 def meta():

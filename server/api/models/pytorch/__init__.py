@@ -2,7 +2,7 @@ import torch
 import spacy
 from torch import nn
 from torch.nn import functional as F
-from models import PYTORCH_AHD_MODEL_PATH, PYTORCH_AHD_VOCAB, device, CLASSES, PredictionType
+from models import *
 
 # Tokens 
 PAD_TOKEN = '<pad>'
@@ -24,7 +24,7 @@ def text_pipeline(x:str)->list:
             v = PYTORCH_AHD_VOCAB[token]
         except:
             v = PYTORCH_AHD_VOCAB[UNK_TOKEN]
-            values.append(v)
+        values.append(v)
     return values
 
 class AHDCNN(nn.Module):
@@ -59,11 +59,15 @@ DROPOUT = 0.5
 INPUT_DIM = len(PYTORCH_AHD_VOCAB) 
 PAD_IDX = PYTORCH_AHD_VOCAB[PAD_TOKEN]
 
+
 # Model instance
 ahd_model = AHDCNN(INPUT_DIM, EMBEDDING_DIM, N_FILTERS, 
                 FILTER_SIZES, OUTPUT_DIM, DROPOUT, PAD_IDX).to(device)
 
 ahd_model.load_state_dict(torch.load(PYTORCH_AHD_MODEL_PATH, map_location=device))
+
+# ahd_model = torch.jit.load(PYTORCH_SCRIPTED_AHD_MODEL_PATH, map_location=device)
+
 print(" ✅ LOADING PYTORCH AHD MODEL DONE!\n")
 
 def preprocess_text(text, max_len=50, padding="pre"):

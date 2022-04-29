@@ -18,6 +18,9 @@ PYTORCH_AHD_MODEL_PATH = os.path.join(os.getcwd(),
 TENSORFLOW_AHD_MODEL_PATH = os.path.join(os.getcwd(),
                                       f"models/tensorflow/static/{TENSORFLOW_MODEL_NAME}"
                                       )
+PYTORCH_SCRIPTED_AHD_MODEL_PATH = os.path.join(os.getcwd(),
+                                      f"models/pytorch/static/model_scripted.pt"
+                                      )
 
 # Text vocabularies
 with open(os.path.join(os.getcwd(), f"models/pytorch/static/vocab-pt.json"), 'r') as ref:

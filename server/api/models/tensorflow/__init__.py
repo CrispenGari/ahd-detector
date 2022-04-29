@@ -1,10 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from models import TENSORFLOW_AHD_MODEL_PATH, TENSORFLOW_AHD_VOCAB, PredictionType
-import nltk
 from nltk.tokenize import word_tokenize
-
-nltk.download('punkt')
 
 max_words = 100
 
